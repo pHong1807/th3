@@ -4,11 +4,11 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../context/CartContext';
 
-export default function CartScreen() {
+export default function CartScreen({ navigation }) {
   const { cartItems, removeFromCart, updateQty, total } = useCart();
 
   const handleCheckout = () => {
-    Alert.alert('Checkout', `Total: $${total.toFixed(2)}\n\nThank you for your order!`, [{ text: 'OK' }]);
+    if (navigation) navigation.navigate('Checkout');
   };
 
   return (

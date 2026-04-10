@@ -1,59 +1,107 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import {
+  View, Text, TouchableOpacity, StyleSheet, Alert, ScrollView, Image
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
 const MenuItem = ({ icon, label, onPress }) => (
   <TouchableOpacity style={styles.menuItem} onPress={onPress}>
     <View style={styles.menuIcon}>
-      <Ionicons name={icon} size={20} color="#4CAF50" />
+      <Ionicons name={icon} size={19} color="#4CAF50" />
     </View>
     <Text style={styles.menuLabel}>{label}</Text>
-    <Ionicons name="chevron-forward" size={18} color="#ccc" />
+    <Ionicons name="chevron-forward" size={17} color="#ddd" />
   </TouchableOpacity>
 );
 
 export default function AccountScreen() {
   const press = (label) => Alert.alert(label, 'Coming soon!', [{ text: 'OK' }]);
+
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Account</Text>
-      <View style={styles.profileCard}>
-        <View style={styles.avatar}>
-          <Ionicons name="person" size={36} color="#fff" />
+      <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 32 }}>
+        <View style={styles.profileSection}>
+          <View style={styles.avatarWrap}>
+            <Image
+             source={require('../../assets/Avatar.jpg')}  
+             style={styles.avatar}
+             resizeMode="cover"
+            />
+            <TouchableOpacity style={styles.editBadge} onPress={() => press('Edit Profile')}>
+              <Ionicons name="pencil" size={11} color="#4CAF50" />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.profileInfo}>
+            <Text style={styles.profileName}>Trần Tuấn Phong</Text>
+            <Text style={styles.profileEmail}>phongtan1098@gmail.com</Text>
+          </View>
         </View>
-        <View>
-          <Text style={styles.name}>Nguyen Van A</Text>
-          <Text style={styles.email}>nguyenvana@email.com</Text>
+
+        <View style={styles.menuCard}>
+          <MenuItem icon="receipt-outline" label="Orders" onPress={() => press('Orders')} />
+          <MenuItem icon="person-outline" label="My Details" onPress={() => press('My Details')} />
+          <MenuItem icon="location-outline" label="Delivery Address" onPress={() => press('Delivery Address')} />
+          <MenuItem icon="card-outline" label="Payment Methods" onPress={() => press('Payment Methods')} />
+          <MenuItem icon="pricetag-outline" label="Promo Card" onPress={() => press('Promo Card')} />
+          <MenuItem icon="notifications-outline" label="Notifecations" onPress={() => press('Notifications')} />
+          <MenuItem icon="help-circle-outline" label="Help" onPress={() => press('Help')} />
+          <MenuItem icon="information-circle-outline" label="About" onPress={() => press('About')} />
         </View>
-      </View>
-      <View style={styles.menu}>
-        <MenuItem icon="receipt-outline" label="My Orders" onPress={() => press('My Orders')} />
-        <MenuItem icon="location-outline" label="Delivery Address" onPress={() => press('Delivery Address')} />
-        <MenuItem icon="card-outline" label="Payment Methods" onPress={() => press('Payment Methods')} />
-        <MenuItem icon="notifications-outline" label="Notifications" onPress={() => press('Notifications')} />
-        <MenuItem icon="help-circle-outline" label="Help & Support" onPress={() => press('Help & Support')} />
-        <MenuItem icon="shield-checkmark-outline" label="Privacy Policy" onPress={() => press('Privacy Policy')} />
-      </View>
-      <TouchableOpacity style={styles.logoutBtn} onPress={() => press('Logout')}>
-        <Ionicons name="log-out-outline" size={20} color="#ff6b6b" />
-        <Text style={styles.logoutText}>Logout</Text>
-      </TouchableOpacity>
+
+        <TouchableOpacity style={styles.logoutBtn} onPress={() => press('Log Out')}>
+          <Ionicons name="log-out-outline" size={19} color="#4CAF50" />
+          <Text style={styles.logoutText}>Log Out</Text>
+        </TouchableOpacity>
+      </ScrollView>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#f8f8f8' },
-  title: { fontSize: 22, fontWeight: '800', color: '#1a1a1a', paddingHorizontal: 16, paddingTop: 8, marginBottom: 16 },
-  profileCard: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', marginHorizontal: 16, borderRadius: 16, padding: 16, gap: 16, elevation: 2, marginBottom: 20 },
-  avatar: { width: 64, height: 64, borderRadius: 32, backgroundColor: '#4CAF50', alignItems: 'center', justifyContent: 'center' },
-  name: { fontSize: 17, fontWeight: '700', color: '#1a1a1a' },
-  email: { fontSize: 13, color: '#999', marginTop: 2 },
-  menu: { backgroundColor: '#fff', marginHorizontal: 16, borderRadius: 16, overflow: 'hidden', elevation: 1 },
-  menuItem: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 16, paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: '#f5f5f5', gap: 12 },
-  menuIcon: { width: 36, height: 36, borderRadius: 10, backgroundColor: '#f0faf0', alignItems: 'center', justifyContent: 'center' },
-  menuLabel: { flex: 1, fontSize: 15, color: '#333' },
-  logoutBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', marginHorizontal: 16, marginTop: 20, backgroundColor: '#fff0f0', borderRadius: 14, paddingVertical: 14, gap: 8 },
-  logoutText: { fontSize: 15, fontWeight: '600', color: '#ff6b6b' },
+  profileSection: {
+    flexDirection: 'row', alignItems: 'center',
+    paddingHorizontal: 20, paddingTop: 16, paddingBottom: 24, gap: 16,
+  },
+  avatarWrap: { position: 'relative' },
+  avatar: {
+    width: 68, height: 68, borderRadius: 34, backgroundColor: '#4CAF50',
+    alignItems: 'center', justifyContent: 'center',
+    elevation: 3, shadowColor: '#4CAF50', shadowOffset: { width: 0, height: 3 }, shadowOpacity: 0.25, shadowRadius: 6,
+  },
+  avatar: {
+  width: 68,
+  height: 68,
+  borderRadius: 34,  
+  },
+  editBadge: {
+    position: 'absolute', bottom: 0, right: 0, width: 22, height: 22, borderRadius: 11,
+    backgroundColor: '#fff', alignItems: 'center', justifyContent: 'center',
+    borderWidth: 1.5, borderColor: '#e8f5e9', elevation: 2,
+  },
+  profileInfo: { flex: 1 },
+  profileName: { fontSize: 18, fontWeight: '700', color: '#1a1a1a', marginBottom: 3 },
+  profileEmail: { fontSize: 13, color: '#888' },
+  menuCard: {
+    backgroundColor: '#fff', marginHorizontal: 16, borderRadius: 20, overflow: 'hidden',
+    elevation: 1, shadowColor: '#000', shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.06, shadowRadius: 6, marginBottom: 16,
+  },
+  menuItem: {
+    flexDirection: 'row', alignItems: 'center',
+    paddingHorizontal: 18, paddingVertical: 15,
+    borderBottomWidth: 1, borderBottomColor: '#f6f6f6', gap: 14,
+  },
+  menuIcon: {
+    width: 38, height: 38, borderRadius: 11, backgroundColor: '#f0faf0',
+    alignItems: 'center', justifyContent: 'center',
+  },
+  menuLabel: { flex: 1, fontSize: 14.5, color: '#2a2a2a', fontWeight: '500' },
+  logoutBtn: {
+    flexDirection: 'row', alignItems: 'center', justifyContent: 'center',
+    marginHorizontal: 16, backgroundColor: '#fff', borderRadius: 16,
+    paddingVertical: 15, gap: 8, elevation: 1, borderWidth: 1.5, borderColor: '#e8f5e9',
+  },
+  logoutText: { fontSize: 15, fontWeight: '600', color: '#4CAF50' },
 });

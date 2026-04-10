@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -11,8 +12,12 @@ import SearchScreen from './src/screens/SearchScreen';
 import CartScreen from './src/screens/CartScreen';
 import FavoritesScreen from './src/screens/FavoritesScreen';
 import AccountScreen from './src/screens/AccountScreen';
+import CheckoutScreen from './src/screens/CheckoutScreen';
+import OrderAcceptedScreen from './src/screens/OrderAcceptedScreen';
+import ErrorScreen from './src/screens/ErrorScreen';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 function TabNavigator() {
   const insets = useSafeAreaInsets();
@@ -58,7 +63,20 @@ export default function App() {
         <FavoritesProvider>
           <NavigationContainer>
             <StatusBar style="dark" />
-            <TabNavigator />
+            <Stack.Navigator screenOptions={{ headerShown: false }}>
+              <Stack.Screen name="Main" component={TabNavigator} />
+              <Stack.Screen name="Checkout" component={CheckoutScreen} />
+              <Stack.Screen
+                name="OrderAccepted"
+                component={OrderAcceptedScreen}
+                options={{ gestureEnabled: false }}
+              />
+              <Stack.Screen
+                name="OrderError"
+                component={ErrorScreen}
+                options={{ presentation: 'transparentModal', animation: 'fade' }}
+              />
+            </Stack.Navigator>
           </NavigationContainer>
         </FavoritesProvider>
       </CartProvider>
