@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Alert } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../context/CartContext';
@@ -56,7 +56,6 @@ export default function CartScreen({ navigation }) {
             )}
           />
 
-          {/* Summary */}
           <View style={styles.summary}>
             <View style={styles.summaryRow}>
               <Text style={styles.summaryLabel}>Subtotal</Text>
@@ -92,9 +91,9 @@ const styles = StyleSheet.create({
   itemInfo: { flex: 1 },
   itemName: { fontSize: 14, fontWeight: '600', color: '#1a1a1a', marginBottom: 2 },
   itemWeight: { fontSize: 12, color: '#999', marginBottom: 8 },
-  qtyRow: { flexDirection: 'row', alignItems: 'center', gap: 12 },
+  qtyRow: { flexDirection: 'row', alignItems: 'center' },
   qtyBtn: { width: 28, height: 28, borderRadius: 8, borderWidth: 1.5, borderColor: '#4CAF50', alignItems: 'center', justifyContent: 'center' },
-  qtyText: { fontSize: 15, fontWeight: '600', color: '#1a1a1a', minWidth: 20, textAlign: 'center' },
+  qtyText: { fontSize: 15, fontWeight: '600', color: '#1a1a1a', minWidth: 20, textAlign: 'center', marginHorizontal: 12 },
   itemRight: { alignItems: 'flex-end', justifyContent: 'space-between', height: 70 },
   deleteBtn: { padding: 2 },
   itemPrice: { fontSize: 15, fontWeight: '700', color: '#1a1a1a' },
@@ -105,8 +104,8 @@ const styles = StyleSheet.create({
   totalRow: { borderTopWidth: 1, borderTopColor: '#f0f0f0', paddingTop: 12, marginTop: 4, marginBottom: 16 },
   totalLabel: { fontSize: 16, fontWeight: '700', color: '#1a1a1a' },
   totalValue: { fontSize: 18, fontWeight: '800', color: '#1a1a1a' },
-  checkoutBtn: { backgroundColor: '#4CAF50', borderRadius: 14, paddingVertical: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 12 },
-  checkoutText: { color: '#fff', fontWeight: '700', fontSize: 16 },
+  checkoutBtn: { backgroundColor: '#4CAF50', borderRadius: 14, paddingVertical: 16, flexDirection: 'row', justifyContent: 'center', alignItems: 'center' },
+  checkoutText: { color: '#fff', fontWeight: '700', fontSize: 16, marginRight: 12 },
   checkoutTotal: { color: '#c8e6c9', fontSize: 14, fontWeight: '600' },
   empty: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   emptyTitle: { fontSize: 18, fontWeight: '700', color: '#1a1a1a', marginTop: 16 },

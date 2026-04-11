@@ -29,30 +29,24 @@ export default function ErrorScreen({ navigation, route }) {
   };
 
   const handleHome = () => {
-    navigation.navigate('Shop');
+    navigation.navigate('Main', { screen: 'Shop' });
   };
 
   return (
     <View style={styles.overlay}>
-      {/* Dimmed background */}
       <Animated.View style={[styles.backdrop, { opacity: fadeAnim }]} />
 
-      {/* Modal card */}
       <Animated.View style={[styles.card, { transform: [{ scale: scaleAnim }], opacity: fadeAnim }]}>
-        {/* Close button */}
         <TouchableOpacity style={styles.closeBtn} onPress={handleHome}>
           <Ionicons name="close" size={20} color="#666" />
         </TouchableOpacity>
 
-        {/* Illustration */}
         <View style={styles.illustration}>
-          {/* Grocery bag emoji illustration */}
           <View style={styles.illustrationCircle}>
             <Text style={styles.illustrationEmoji}>🛒</Text>
           </View>
         </View>
 
-        {/* Error Text */}
         <Text style={styles.title}>Oops! Order Failed</Text>
         <Text style={styles.subtitle}>Something went terribly wrong.</Text>
 
@@ -73,8 +67,6 @@ export default function ErrorScreen({ navigation, route }) {
   );
 }
 
-// This screen can also be shown as a modal from CheckoutScreen via navigation
-// or standalone as a full screen
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,

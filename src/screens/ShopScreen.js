@@ -1,117 +1,326 @@
-import React from 'react';
-import { View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View, Text, ScrollView, TouchableOpacity, Image, StyleSheet, FlatList, TextInput,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../context/CartContext';
 import { products } from '../data/products';
 
+const exclusiveOffers = [
+  { id: '7', name: 'Organic Bananas', weight: '7pcs', price: 4.99, category: 'Fruits', image: require('../../assets/banana.png') },
+  { id: 'r1', name: 'Red Apple', weight: '1kg', price: 4.99, category: 'Fruits', image: require('../../assets/redapple.png') },
+];
+
+const bestSelling = [
+  { id: 'b1', name: 'Bell Pepper Red', weight: '1kg', price: 4.99, category: 'Vegetables', image: require('../../assets/bellpepper.png') },
+  { id: 'b2', name: 'Ginger', weight: '250gm', price: 2.99, category: 'Vegetables', image: require('../../assets/ginger.png') },
+];
+
+const groceryCategories = [
+  { name: 'Pulses', bg: '#fff8ee', image: require('../../assets/pulses.png') },
+  { name: 'Rice', bg: '#f2f9ee', image: require('../../assets/rice.png') },
+  { name: 'Oil', bg: '#fff0f0', image: require('../../assets/oil.png') },
+  { name: 'Bread', bg: '#f0f4ff', image: require('../../assets/bread.png') },
+];
+
+const groceryProducts = [
+  { id: 'g1', name: 'Beef Bone', weight: '1kg', price: 4.99, image: require('../../assets/beefbone.png') },
+  { id: 'g2', name: 'Broiler Chicken', weight: '1kg', price: 4.99, image: require('../../assets/broilerchicken.png') },
+];
+
+function SectionHeader({ title, onSeeAll }) {
+  return (
+    <View style={styles.sectionHeader}>
+      <Text style={styles.sectionTitle}>{title}</Text>
+      <TouchableOpacity onPress={onSeeAll}>
+        <Text style={styles.seeAll}>See all</Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function ProductCard({ item, onAdd, onPress }) {
+  return (
+    <TouchableOpacity style={styles.productCard} onPress={onPress} activeOpacity={0.85}>
+      <Image source={item.image} style={styles.productImg} resizeMode="contain" />
+      <Text style={styles.productName}>{item.name}</Text>
+      <Text style={styles.productWeight}>{item.weight}, Priceg</Text>
+      <View style={styles.priceRow}>
+        <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+        <TouchableOpacity style={styles.addBtn} onPress={onAdd}>
+          <Ionicons name="add" size={22} color="#fff" />
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
+  );
+}
+
 export default function ShopScreen({ navigation }) {
   const { addToCart, count } = useCart();
-  const featured = products.slice(0, 4);
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
+
         {/* Header */}
         <View style={styles.header}>
-          <View>
-            <Text style={styles.location}>📍 Hanoi, Vietnam</Text>
-            <Text style={styles.headerTitle}>Good Morning! 👋</Text>
+          <View style={styles.headerCenter}>
+            <Image source={require('../../assets/carrot.png')} style={styles.carrotIcon} resizeMode="contain" />
+            <View style={styles.locationRow}>
+              <Ionicons name="location-sharp" size={14} color="#4CAF50" />
+              <Text style={styles.locationText}>Trần Tuấn Phong, 23810310316</Text>
+            </View>
           </View>
-          <TouchableOpacity onPress={() => navigation.navigate('Cart')} style={styles.cartBtn}>
-            <Ionicons name="cart-outline" size={24} color="#333" />
-            {count > 0 && <View style={styles.badge}><Text style={styles.badgeText}>{count}</Text></View>}
-          </TouchableOpacity>
         </View>
 
         {/* Search Bar */}
         <TouchableOpacity style={styles.searchBar} onPress={() => navigation.navigate('Explore')}>
           <Ionicons name="search-outline" size={18} color="#999" />
-          <Text style={styles.searchPlaceholder}>Search for groceries...</Text>
+          <Text style={styles.searchPlaceholder}>Search Store</Text>
         </TouchableOpacity>
 
         {/* Banner */}
-        <View style={styles.banner}>
-          <View style={styles.bannerContent}>
-            <Text style={styles.bannerSub}>Fresh & Organic</Text>
-            <Text style={styles.bannerTitle}>Get Your Daily{'\n'}Groceries Fast!</Text>
-            <TouchableOpacity style={styles.bannerBtn}>
-              <Text style={styles.bannerBtnText}>Shop Now</Text>
-            </TouchableOpacity>
-          </View>
-          <Image source={require('../../assets/banana.png')} style={styles.bannerImg} resizeMode="contain" />
+        <View style={styles.bannerWrap}>
+          <Image source={require('../../assets/banner.png')} style={styles.bannerImg} resizeMode="cover" />
         </View>
 
-        {/* Categories */}
-        <Text style={styles.sectionTitle}>Categories</Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.catRow}>
-          {['🥚 Eggs', '🍝 Noodles', '🍟 Chips', '🥤 Drinks', '🍌 Fruits', '🥦 Veggies'].map((cat, i) => (
-            <TouchableOpacity key={i} style={styles.catCard} onPress={() => navigation.navigate('Explore')}>
-              <Text style={styles.catText}>{cat}</Text>
+        {/* Exclusive Offer */}
+        <SectionHeader title="Exclusive Offer" onSeeAll={() => navigation.navigate('Explore')} />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hScroll}>
+          {exclusiveOffers.map(item => (
+            <ProductCard
+              key={item.id}
+              item={item}
+              onAdd={() => addToCart(item)}
+              onPress={() => navigation.navigate('ProductDetail', { item })}
+            />
+          ))}
+        </ScrollView>
+
+        {/* Best Selling */}
+        <SectionHeader title="Best Selling" onSeeAll={() => navigation.navigate('Explore')} />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hScroll}>
+          {bestSelling.map(item => (
+            <ProductCard
+              key={item.id}
+              item={item}
+              onAdd={() => addToCart(item)}
+              onPress={() => navigation.navigate('ProductDetail', { item })}
+            />
+          ))}
+        </ScrollView>
+
+        {/* Groceries */}
+        <SectionHeader title="Groceries" onSeeAll={() => navigation.navigate('Explore')} />
+
+        {/* Category chips horizontal */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hScroll}>
+          {groceryCategories.map(cat => (
+            <TouchableOpacity
+              key={cat.name}
+              style={[styles.groceryCat, { backgroundColor: cat.bg }]}
+              onPress={() => navigation.navigate('Explore')}
+            >
+              <Image source={cat.image} style={styles.groceryCatImg} resizeMode="contain" />
+              <Text style={styles.groceryCatName}>{cat.name}</Text>
             </TouchableOpacity>
           ))}
         </ScrollView>
 
-        {/* Featured */}
-        <View style={styles.rowBetween}>
-          <Text style={styles.sectionTitle}>Featured Products</Text>
-          <TouchableOpacity onPress={() => navigation.navigate('Explore')}>
-            <Text style={styles.seeAll}>See All</Text>
-          </TouchableOpacity>
+        {/* Grocery products grid */}
+        <View style={styles.gridRow}>
+          {groceryProducts.map(item => (
+            <ProductCard
+              key={item.id}
+              item={item}
+              onAdd={() => addToCart(item)}
+              onPress={() => navigation.navigate('ProductDetail', { item })}
+            />
+          ))}
         </View>
-        <FlatList
-          data={featured}
-          numColumns={2}
-          keyExtractor={i => i.id}
-          scrollEnabled={false}
-          columnWrapperStyle={{ paddingHorizontal: 16, gap: 12 }}
-          renderItem={({ item }) => (
-            <View style={styles.productCard}>
-              <Image source={item.image} style={styles.productImg} resizeMode="contain" />
-              <Text style={styles.productName}>{item.name}</Text>
-              <Text style={styles.productWeight}>{item.weight}, Price</Text>
-              <View style={styles.rowBetween}>
-                <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
-                <TouchableOpacity style={styles.addBtn} onPress={() => addToCart(item)}>
-                  <Ionicons name="add" size={20} color="#fff" />
-                </TouchableOpacity>
-              </View>
-            </View>
-          )}
-        />
-        <View style={{ height: 20 }} />
+
+        <View style={{ height: 24 }} />
       </ScrollView>
     </SafeAreaView>
   );
 }
 
+const CARD_WIDTH = 174;
+
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f8f8f8' },
-  header: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingHorizontal: 16, paddingTop: 8, paddingBottom: 12 },
-  location: { fontSize: 12, color: '#666' },
-  headerTitle: { fontSize: 20, fontWeight: '700', color: '#1a1a1a', marginTop: 2 },
-  cartBtn: { padding: 8, backgroundColor: '#fff', borderRadius: 12, elevation: 2 },
-  badge: { position: 'absolute', top: 4, right: 4, backgroundColor: '#4CAF50', borderRadius: 8, width: 16, height: 16, alignItems: 'center', justifyContent: 'center' },
+  container: { flex: 1, backgroundColor: '#fff' },
+
+  // Header
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 12,
+  },
+  headerCenter: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  carrotIcon: {
+    width: 28,
+    height: 28,
+    marginBottom: 4,
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  locationText: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#1a1a1a',
+    marginLeft: 4,
+  },
+  badge: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    backgroundColor: '#4CAF50',
+    borderRadius: 8,
+    width: 16,
+    height: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   badgeText: { color: '#fff', fontSize: 10, fontWeight: '700' },
-  searchBar: { flexDirection: 'row', alignItems: 'center', backgroundColor: '#fff', marginHorizontal: 16, borderRadius: 12, paddingHorizontal: 12, paddingVertical: 12, gap: 8, elevation: 1, marginBottom: 16 },
-  searchPlaceholder: { color: '#aaa', fontSize: 14 },
-  banner: { marginHorizontal: 16, backgroundColor: '#4CAF50', borderRadius: 16, padding: 20, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 },
-  bannerContent: { flex: 1 },
-  bannerSub: { color: '#c8e6c9', fontSize: 12, marginBottom: 4 },
-  bannerTitle: { color: '#fff', fontSize: 20, fontWeight: '800', lineHeight: 26, marginBottom: 12 },
-  bannerBtn: { backgroundColor: '#fff', paddingHorizontal: 16, paddingVertical: 8, borderRadius: 20, alignSelf: 'flex-start' },
-  bannerBtnText: { color: '#4CAF50', fontWeight: '700', fontSize: 13 },
-  bannerImg: { width: 90, height: 90 },
-  sectionTitle: { fontSize: 17, fontWeight: '700', color: '#1a1a1a', paddingHorizontal: 16, marginBottom: 12 },
-  seeAll: { color: '#4CAF50', fontSize: 13, paddingHorizontal: 16, marginBottom: 12 },
-  catRow: { paddingLeft: 16, marginBottom: 20 },
-  catCard: { backgroundColor: '#fff', paddingHorizontal: 14, paddingVertical: 8, borderRadius: 20, marginRight: 8, elevation: 1 },
-  catText: { fontSize: 13, color: '#333' },
-  rowBetween: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
-  productCard: { flex: 1, backgroundColor: '#fff', borderRadius: 16, padding: 12, marginBottom: 12, elevation: 2 },
-  productImg: { width: '100%', height: 100, marginBottom: 8 },
-  productName: { fontSize: 13, fontWeight: '600', color: '#1a1a1a', marginBottom: 2 },
-  productWeight: { fontSize: 11, color: '#999', marginBottom: 8 },
-  productPrice: { fontSize: 15, fontWeight: '700', color: '#1a1a1a' },
-  addBtn: { backgroundColor: '#4CAF50', borderRadius: 8, width: 32, height: 32, alignItems: 'center', justifyContent: 'center' },
+
+  // Search
+  searchBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f2f3f2',
+    marginHorizontal: 16,
+    borderRadius: 15,
+    paddingHorizontal: 14,
+    paddingVertical: 12,
+    marginBottom: 16,
+  },
+  searchPlaceholder: { color: '#7c7c7c', fontSize: 14, marginLeft: 8 },
+
+  // Banner
+  bannerWrap: {
+    marginHorizontal: 16,
+    borderRadius: 16,
+    overflow: 'hidden',
+    height: 130,
+    marginBottom: 20,
+    position: 'relative',
+  },
+  bannerImg: {
+    width: '100%',
+    height: '100%',
+  },
+  bannerOverlay: {
+    position: 'absolute',
+    right: 16,
+    top: 0,
+    bottom: 0,
+    justifyContent: 'center',
+  },
+  bannerTitle: {
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#1a1a1a',
+    textAlign: 'right',
+  },
+  bannerSub: {
+    fontSize: 12,
+    color: '#4CAF50',
+    fontWeight: '600',
+    textAlign: 'right',
+  },
+  dotsRow: {
+    position: 'absolute',
+    bottom: 10,
+    left: 0,
+    right: 0,
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  dot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#ccc',
+    marginHorizontal: 2,
+  },
+  dotActive: {
+    backgroundColor: '#4CAF50',
+    width: 16,
+  },
+
+  // Section header
+  sectionHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    marginBottom: 12,
+  },
+  sectionTitle: { fontSize: 18, fontWeight: '700', color: '#1a1a1a' },
+  seeAll: { fontSize: 14, color: '#4CAF50', fontWeight: '600' },
+
+  // Horizontal scroll
+  hScroll: {
+    paddingLeft: 16,
+    paddingRight: 8,
+    paddingBottom: 8,
+    marginBottom: 12,
+  },
+
+  // Product card
+  productCard: {
+    width: CARD_WIDTH,
+    backgroundColor: '#fff',
+    borderRadius: 18,
+    padding: 12,
+    marginRight: 12,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#e2e2e2',
+  },
+  productImg: {
+    width: '100%',
+    height: 100,
+    marginBottom: 8,
+  },
+  productName: { fontSize: 14, fontWeight: '700', color: '#1a1a1a', marginBottom: 2 },
+  productWeight: { fontSize: 12, color: '#7c7c7c', marginBottom: 8 },
+  priceRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  productPrice: { fontSize: 16, fontWeight: '700', color: '#1a1a1a' },
+  addBtn: {
+    backgroundColor: '#4CAF50',
+    borderRadius: 17,
+    width: 34,
+    height: 34,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // Grocery categories
+  groceryCat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderRadius: 14,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    marginRight: 12,
+    minWidth: 110,
+  },
+  groceryCatImg: { width: 36, height: 36, marginRight: 8 },
+  groceryCatName: { fontSize: 14, fontWeight: '600', color: '#1a1a1a' },
+
+  // Grid row for grocery products
+  gridRow: {
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+  },
 });

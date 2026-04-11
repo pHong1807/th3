@@ -5,9 +5,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useCart } from '../context/CartContext';
+import { useOrders } from '../context/OrderContext';
 
 export default function CheckoutScreen({ navigation }) {
-  const { cartItems, total, removeFromCart } = useCart();
+  const { cartItems, total, clearCart } = useCart();
+  const { placeOrder } = useOrders();
   const [deliveryMethod, setDeliveryMethod] = useState('Standard Delivery');
   const [showDeliveryModal, setShowDeliveryModal] = useState(false);
   const [promoCode, setPromoCode] = useState('');
@@ -16,12 +18,15 @@ export default function CheckoutScreen({ navigation }) {
   const deliveryOptions = ['Standard Delivery', 'Express Delivery', 'Pick Up'];
   const promoCodes = ['SAVE10', 'FRESH20', 'NEWUSER'];
 
-  const handlePlaceOrder = () => {
-  if (cartItems.length === 3) {
-    navigation.navigate('OrderError');
-  } else {
+  const handlePlaceOrder = async () => {
+    if (cartItems.length === 0) return;
+    if (cartItems.length === 3) {
+      navigation.navigate('OrderError');
+      return;
+    }
+    await placeOrder({ items: cartItems, total, deliveryMethod });
+    await clearCart();
     navigation.navigate('OrderAccepted');
-  }
   };
 
   return (

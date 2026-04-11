@@ -4,8 +4,20 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaProvider, useSafeAreaInsets } from 'react-native-safe-area-context';
+
+import { AuthProvider } from './src/context/AuthContext';
 import { CartProvider } from './src/context/CartContext';
 import { FavoritesProvider } from './src/context/FavoritesContext';
+import { OrderProvider } from './src/context/OrderContext';
+
+import SplashScreen from './src/screens/SplashScreen';
+import OnboardingScreen from './src/screens/OnboardingScreen';
+import SignInScreen from './src/screens/SignInScreen';
+import PhoneNumberScreen from './src/screens/PhoneNumberScreen';
+import VerificationScreen from './src/screens/VerificationScreen';
+import SelectLocationScreen from './src/screens/SelectLocationScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import SignUpScreen from './src/screens/SignUpScreen';
 
 import ShopScreen from './src/screens/ShopScreen';
 import SearchScreen from './src/screens/SearchScreen';
@@ -15,6 +27,9 @@ import AccountScreen from './src/screens/AccountScreen';
 import CheckoutScreen from './src/screens/CheckoutScreen';
 import OrderAcceptedScreen from './src/screens/OrderAcceptedScreen';
 import ErrorScreen from './src/screens/ErrorScreen';
+import ProductDetailScreen from './src/screens/ProductDetailScreen';
+import CategoryScreen from './src/screens/CategoryScreen';
+import OrdersScreen from './src/screens/OrdersScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
@@ -59,27 +74,45 @@ function TabNavigator() {
 export default function App() {
   return (
     <SafeAreaProvider>
-      <CartProvider>
-        <FavoritesProvider>
-          <NavigationContainer>
-            <StatusBar style="dark" />
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-              <Stack.Screen name="Main" component={TabNavigator} />
-              <Stack.Screen name="Checkout" component={CheckoutScreen} />
-              <Stack.Screen
-                name="OrderAccepted"
-                component={OrderAcceptedScreen}
-                options={{ gestureEnabled: false }}
-              />
-              <Stack.Screen
-                name="OrderError"
-                component={ErrorScreen}
-                options={{ presentation: 'transparentModal', animation: 'fade' }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </FavoritesProvider>
-      </CartProvider>
+      <AuthProvider>
+        <CartProvider>
+          <FavoritesProvider>
+            <OrderProvider>
+              <NavigationContainer>
+                <StatusBar style="dark" />
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                  {/* Auth Flow */}
+                  <Stack.Screen name="Splash" component={SplashScreen} />
+                  <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+                  <Stack.Screen name="SignIn" component={SignInScreen} />
+                  <Stack.Screen name="PhoneNumber" component={PhoneNumberScreen} />
+                  <Stack.Screen name="Verification" component={VerificationScreen} />
+                  <Stack.Screen name="SelectLocation" component={SelectLocationScreen} />
+                  <Stack.Screen name="Login" component={LoginScreen} />
+                  <Stack.Screen name="SignUp" component={SignUpScreen} />
+
+                  {/* Main App */}
+                  <Stack.Screen name="Main" component={TabNavigator} />
+                  <Stack.Screen name="ProductDetail" component={ProductDetailScreen} />
+                  <Stack.Screen name="Category" component={CategoryScreen} />
+                  <Stack.Screen name="Checkout" component={CheckoutScreen} />
+                  <Stack.Screen name="Orders" component={OrdersScreen} />
+                  <Stack.Screen
+                    name="OrderAccepted"
+                    component={OrderAcceptedScreen}
+                    options={{ gestureEnabled: false }}
+                  />
+                  <Stack.Screen
+                    name="OrderError"
+                    component={ErrorScreen}
+                    options={{ presentation: 'transparentModal', animation: 'fade' }}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </OrderProvider>
+          </FavoritesProvider>
+        </CartProvider>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }

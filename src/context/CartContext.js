@@ -1,14 +1,43 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CartContext = createContext();
 
+const CART_KEY = '@nectar_cart';
+
 export function CartProvider({ children }) {
-  const [cartItems, setCartItems] = useState([
-    { id: '1', name: 'Bell Pepper Red', weight: '1kg', price: 4.99, qty: 1, image: require('../../assets/bellpepper.png') },
-    { id: '2', name: 'Egg Chicken Red', weight: '4pcs', price: 1.99, qty: 1, image: require('../../assets/banana.png') },
-    { id: '3', name: 'Organic Bananas', weight: '12kg', price: 3.00, qty: 1, image: require('../../assets/banana.png') },
-    { id: '4', name: 'Ginger', weight: '250gm', price: 2.99, qty: 1, image: require('../../assets/ginger.png') },
-  ]);
+  const [cartItems, setCartItems] = useState([]);
+  const [cartLoaded, setCartLoaded] = useState(false);
+
+  // Khi app khởi động: tải giỏ hàng từ AsyncStorage
+  useEffect(() => {
+    const loadCart = async () => {
+      try {
+        const json = await AsyncStorage.getItem(CART_KEY);
+        if (json) {
+          setCartItems(JSON.parse(json));
+        }
+      } catch (e) {
+        console.warn('Lỗi khi tải giỏ hàng:', e);
+      } finally {
+        setCartLoaded(true);
+      }
+    };
+    loadCart();
+  }, []);
+
+  // Mỗi khi cartItems thay đổi: lưu vào AsyncStorage
+  useEffect(() => {
+    if (!cartLoaded) return;
+    const saveCart = async () => {
+      try {
+        await AsyncStorage.setItem(CART_KEY, JSON.stringify(cartItems));
+      } catch (e) {
+        console.warn('Lỗi khi lưu giỏ hàng:', e);
+      }
+    };
+    saveCart();
+  }, [cartItems, cartLoaded]);
 
   const addToCart = (product) => {
     setCartItems(prev => {
@@ -28,13 +57,20 @@ export function CartProvider({ children }) {
     );
   };
 
-  const clearCart = () => setCartItems([]);
+  const clearCart = async () => {
+    setCartItems([]);
+    try {
+      await AsyncStorage.removeItem(CART_KEY);
+    } catch (e) {
+      console.warn('Lỗi khi xóa giỏ hàng:', e);
+    }
+  };
 
   const total = cartItems.reduce((sum, i) => sum + i.price * i.qty, 0);
   const count = cartItems.reduce((sum, i) => sum + i.qty, 0);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQty, clearCart, total, count }}>
+    <CartContext.Provider value={{ cartItems, cartLoaded, addToCart, removeFromCart, updateQty, clearCart, total, count }}>
       {children}
     </CartContext.Provider>
   );
