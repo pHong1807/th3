@@ -28,7 +28,7 @@ Câu hỏi:
 | Mất khi reload |  Không       |     Có        |
 
 Video Demo:
-[▶️ Xem video demo](./demo/demo.mp4)
+[▶️ Watch Demo](https://raw.githubusercontent.com/pHong1807/th3/main/demo/demo.mp4)
 
 Hình ảnh:
 Splashcreen:
