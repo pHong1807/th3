@@ -1,12 +1,19 @@
 Trần Tuấn Phong - 23810310316
 
 Mô tả chức năng: 
+
 -Xác thực người dùng
+
 -Khám phá sản phẩm
+
 -Giỏ hàng
+
 -Đặt hàng
+
 -Lịch sử đơn hàng
+
 -Yêu thích
+
 -Tài khoản
 
 Cách chạy: chạy lệnh 'npm start' ở git bash
