@@ -11,9 +11,13 @@ Mô tả chức năng:
 
 Cách chạy: chạy lệnh 'npm start' ở git bash
 
+Lưu ý: ứng dụng đưuọc thiết kế để màn hình lỗi đặt hàng chỉ hiện ra chỉ khi có đúng 3 sản phẩm
+
 Câu hỏi:
 1.AsyncStorage là một hệ thống lưu trữ key-value trên thiết bị, hoạt động bất đồng bộ (async). Dữ liệu được ghi vào bộ nhớ cục bộ của điện thoại, tồn tại ngay cả khi tắt app.
+
 2.State (useState) chỉ sống trong bộ nhớ RAM, tắt app là mất. AsyncStorage ghi ra đĩa nên dữ liệu tồn tại lâu dài.
+
 3.So sánh AsyncStorage vs Context API
 | Tiêu chí       | AsyncStorage | Context API   |
 | -------------- | ------------ | ------------- |
